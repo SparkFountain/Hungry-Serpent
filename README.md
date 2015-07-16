@@ -1,11 +1,11 @@
 # HUNGRY SERPENT
-## © by Spark Fountain, 2013.
+###### © by Spark Fountain, 2013.
 
 Vielen Dank, dass du dir das Spiel heruntergeladen hast!
 
 
 
-# 1) Worum geht's?
+## Worum geht's?
 
 Es handelt sich bei diesem Spiel um einen ganz einfachen Snake-Klon, mit absolut zweck-
 mäßiger, computergenerierter Grafik und ohne externe Ressourcen.
@@ -17,7 +17,7 @@ selbst mal einen Snake-Klon zu programmieren.
 
 
 
-# 2) Steuerung
+## Steuerung
 
 Mit den Pfeiltasten links, rechts, oben und unten wird die Schlange bewegt. Versuche auf
 die roten Äpfel zuzusteuern (das sind die roten Kreise), während du nicht gegen Steine
@@ -27,9 +27,9 @@ Wenn du verlierst, endet das Spiel einfach mit einer Meldung über deine Punktza
 
 
 
-# 3) Credits
+## Credits
 
 * Programmierung: Spark Fountain
 
 
-### Viel Spaß beim Spielen!
+#### Viel Spaß beim Spielen!
