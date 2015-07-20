@@ -2,18 +2,18 @@
 ;==============
 ;© by Spark Fountain, 2013.
 
-AppTitle "Hungry Serpent"
+AppTitle("Hungry Serpent")
 
 ;Screen resolution (in square fields, each square 32x32 pixels)
 Global screenX = 20
 Global screenY = 15
 
-Graphics screenX*32,screenY*32,16,2
-SetBuffer BackBuffer()
+Graphics(screenX*32,screenY*32,16,2)
+SetBuffer(BackBuffer())
 Global frameTimer = CreateTimer(60)
-SeedRnd MilliSecs()
+SeedRnd(MilliSecs())
 
-ClsColor 20,50,150
+ClsColor(20,50,150)
 HidePointer()
 
 ;GLOBALS
@@ -27,13 +27,14 @@ Global speed = 150
 Global points = 0
 
 ;create head of snake
-s.Snake = New Snake
+Local s.Snake = New Snake
 s\x = snakeX
 s\y = snakeY
 s\direction = "left"
 snakeLength=snakeLength+1
 
 ;at the beginning, snake consists of 4 parts (1 head, 3 tail)
+Local i
 For i=0 To 2
 	ElongateSnake()
 	snakeLength=snakeLength+1
@@ -56,9 +57,9 @@ Repeat
 	
 	GUI()
 	
-	;DebugStats()
+	DebugStats()
 	
-	Flip 0
+	Flip(0)
 	
 	
 Until KeyHit(1)
@@ -67,55 +68,39 @@ End
 
 
 Function CreateApple()
-	
-	a.Apple = New Apple
+	Local a.Apple = New Apple
 	a\x = Rnd(1,screenX-1)
 	a\y = Rnd(1,screenY-1)
-	
 End Function
-	
-
 
 Function DrawApple()
-	
 	SetColor("apple")
+	Local a.Apple
 	For a.Apple = Each Apple
-		Oval a\x*32,a\y*32,32,32,1
+		Oval(a\x*32,a\y*32,32,32,1)
 	Next
-	
 End Function 
 
-
-
 Function CreateBarrier()
-	
-	b.Barrier = New Barrier
+	Local b.Barrier = New Barrier
 	b\x = Rnd(screenX-1)
 	b\y = Rnd(screenY-1)
-	
 End Function
-
-
 
 Function DrawBarrier()
-	
 	SetColor("barrier")
+	Local b.Barrier
 	For b.Barrier = Each Barrier
-		Oval b\x*32,b\y*32,32,32,1
+		Oval(b\x*32,b\y*32,32,32,1)
 	Next
-	
 End Function
 
-
-
 Function MoveSnake()
-	
 	If (MilliSecs()-lastMillis) > speed Then
-		
-		lastMillis = MilliSecs()	;set back timer
-		head.Snake = First Snake
-	
+		lastMillis = MilliSecs()	;reset timer
+		Local head.Snake = First Snake
 		If KeyHit(200)
+			Local w.Waypoint
 			If (head\direction$ <> "down" And head\direction$ <> "up") Then
 				w.Waypoint = New Waypoint
 				w\x = head\x
@@ -153,6 +138,7 @@ Function MoveSnake()
 			EndIf
 		EndIf
 		
+		Local s.Snake
 		For s.Snake = Each Snake
 			Select s\direction
 				Case "up"
@@ -167,19 +153,14 @@ Function MoveSnake()
 		Next
 		
 		CheckWaypoints()
-		
 	EndIf
-	
 End Function
 
-
-
 Function ElongateSnake()
-	
 	;get tail of snake to add a new part behind
-	tail.Snake = Last Snake
+	Local tail.Snake = Last Snake
 	
-	s.Snake = New Snake
+	Local s.Snake = New Snake
 	Select tail\direction
 		Case "up"
 			s\x = tail\x
@@ -198,49 +179,46 @@ Function ElongateSnake()
 			s\y = tail\y
 			s\direction$ = "right"
 	End Select
-	
 End Function
 
-
-
 Function DrawSnake()
-	
 	SetColor("snake")
+	Local s.Snake
 	For s.Snake = Each Snake
 		Rect s\x*32,s\y*32,32,32,1
 	Next
-	
 End Function 
 
 
 
 Function SnakeCollides()
-	
+	Local s.Snake
 	For s.Snake = Each Snake
-		
 		;bite yourself
+		Local s2.Snake
 		For s2.Snake = Each Snake
 			If (s <> s2 And s\x=s2\x And s\y=s2\y) Then
 				RuntimeError "Du hast dich selbst gebissen! Deine Punkte: "+points
 			EndIf
 		Next
-		
-		
 	Next
 	
-	head.Snake = First Snake
+	Local head.Snake = First Snake
 	;eat an apple
+	Local a.Apple
 	For a.Apple = Each Apple
 		If (head\x=a\x And head\y=a\y) Then
 			snakeLength=snakeLength+1
 			points=points+100
 			Delete a
+			Local b.Barrier
 			For b.Barrier = Each Barrier
 				Delete b
 			Next
 			ElongateSnake()
 			CreateApple()
 			If (snakeLength>4) Then
+				Local i
 				For i=0 To Rnd(1,3)
 					CreateBarrier()
 				Next
@@ -259,14 +237,12 @@ Function SnakeCollides()
 	If (head\x<0 Or head\y<0 Or head\x>screenX-1 Or head\y>screenY-1) Then
 		RuntimeError "Du hast den Rand berührt! Deine Punkte: "+points
 	EndIf
-	
 End Function
 
-
-
 Function CheckWaypoints()
-	
+	Local s.Snake
 	For s.Snake = Each Snake
+		Local w.Waypoint
 		For w.Waypoint = Each Waypoint
 			If (s\x=w\x And s\y=w\y) Then
 				s\direction$ = w\direction$
@@ -278,13 +254,9 @@ Function CheckWaypoints()
 			EndIf
 		Next
 	Next
-	
 End Function
 
-
-
 Function SetColor(c$)
-	
 	Select c$
 		Case "apple"
 			Color 255,0,0
@@ -295,63 +267,39 @@ Function SetColor(c$)
 		Case "debug"
 			Color 255,255,0
 	End Select
-	
 End Function
-
-
 
 Function GUI()
-	
 	Text 0,0,"Punkte: "+points
-	
 End Function
 
-
-
 Function DebugStats()
-	
 	SetColor("debug")
+	Local w.Waypoint
 	For w.Waypoint = Each Waypoint
 		Text w\x*32,w\y*32,"X: "+w\passed
 	Next
 	
 	Text 0,20,"Länge der Schlange: "+snakeLength
-	
 End Function
 
-
-
 Type Apple
-	
 	Field x,y
-	
 End Type
-
-
 
 Type Barrier
-	
 	Field x,y
-	
 End Type
-
-
 
 Type Snake
-	
 	Field x,y
 	Field direction$
-	
 End Type
 
-
-
 Type Waypoint
-	
 	Field x,y
 	Field direction$
 	Field passed	;how often this waypoint has already been passed by the snake
-	
 End Type
 ;~IDEal Editor Parameters:
 ;~C#Blitz3D
