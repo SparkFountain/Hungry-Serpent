@@ -1,6 +1,5 @@
-![Hungry Serpent Logo](https://raw.githubusercontent.com/SparkFountain/Hungry-Serpent/master/logo.png "Logo")
-
 # Hungry Serpent
+![Hungry Serpent Logo](https://raw.githubusercontent.com/SparkFountain/Hungry-Serpent/master/logo.png "Logo")
 ###### © by [Spark Fountain](http://sparkfountain.de/), 2013 - 2015
 
 ## Worum geht's?
