@@ -17,63 +17,100 @@ ClsColor(20,50,150)
 HidePointer()
 
 ;GLOBALS
-Global snakeX = screenX-4
-Global snakeY = screenY/2
-Global snakeLength = 0
+Global snakeX
+Global snakeY
+Global snakeLength
+Global numberOfApples
+Global score
 
-Global lastMillis = 0
-Global waitSnakeTimer = 200
+Global lastMillis
+Global waitSnakeTimer
 
-Global numberOfApples = 0
-Global points = 0
+Global language$ = "en"
 
+;GUI FONT
 Global guiFont = LoadFont("Courier",24,1)
 SetFont(guiFont)
 
-;create head of snake
-Local s.Snake = New Snake
-s\x = snakeX
-s\y = snakeY
-s\direction = "left"
-snakeLength=snakeLength+1
+;first time when game starts
+InitGame()
 
-;at the beginning, snake consists of 4 parts (1 head, 3 tail)
-Local i
-For i=0 To 2
-	ElongateSnake()
-	snakeLength=snakeLength+1
-Next
-
-;create first apple
-CreateApples()
-
-;MAIN LOOP
+;=== MAIN LOOP
 Repeat
-	
 	WaitTimer(frameTimer)
 	Cls()
 	
 	DrawApple()
-	DrawBarrier()
+	DrawRock()
 	MoveSnake()
 	DrawSnake()
 	SnakeCollides()
-	
+	ToggleLanguage()
 	GUI()
 	
-	;DebugStats()
-	
 	Flip(0)
-	
 Until(KeyHit(1))
-End
+End()
+;=== END OF MAIN LOOP
 
 
+Function InitGame()
+	FlushKeys()
+	
+	;delete old snake, apples, rocks and wayscore
+	Local s.Snake
+	For s.Snake = Each Snake
+		Delete s
+	Next
+	
+	Local a.Apple
+	For a.Apple = Each Apple
+		Delete a
+	Next
+	
+	Local r.Rock
+	For r.Rock = Each Rock
+		Delete r
+	Next
+	
+	Local w.Waypoint
+	For w.Waypoint = Each Waypoint
+		Delete w
+	Next
+	
+	;reset values
+	snakeX = screenX-4
+	snakeY = screenY/2
+	snakeLength = 0
+	
+	lastMillis = 0
+	waitSnakeTimer = 200
+	
+	numberOfApples = 0
+	score = 0
+	
+	;create head of snake
+	s.Snake = New Snake
+	s\x = snakeX
+	s\y = snakeY
+	s\direction = "left"
+	snakeLength = snakeLength+1
+	
+	;at the beginning, snake consists of 4 parts (1 head, 3 tail)
+	Local i
+	For i=0 To 2
+		ElongateSnake()
+		snakeLength = snakeLength+1
+	Next
+	
+	;create first apple
+	CreateApples()
+End Function
 
 Function GetValidCoordinates$(forElement$)
 	Local validCoordinates
 	Local x,y
-	Local s.Snake, a.Apple, b.Barrier
+	Local s.Snake, a.Apple, r.Rock
 	Repeat
 		validCoordinates = True
 		x = Rnd(1,screenY-1)
@@ -84,14 +121,14 @@ Function GetValidCoordinates$(forElement$)
 			If(s\x=x And s\y=y) Then validCoordinates = False
 		Next
 		
-		;if apple: don't create where a barrier is
+		;if apple: don't create where a rock is
 		If(forElement$ = "apple") Then
-			For b.Barrier = Each Barrier
-				If(b\x=x And b\y=y) Then validCoordinates = False
+			For r.Rock = Each Rock
+				If(r\x=x And r\y=y) Then validCoordinates = False
 			Next
 		EndIf
 		
-		;if barrier: don't create where an apple is
+		;if rock: don't create where an apple is
 		If(forElement$ = "apple") Then
 			For a.Apple = Each Apple
 				If(a\x=x And a\y=y) Then validCoordinates = False
@@ -121,18 +158,18 @@ Function DrawApple()
 	Next
 End Function 
 
-Function CreateBarrier()
-	Local coordinates$ = GetValidCoordinates("barrier")
-	Local b.Barrier = New Barrier
-	b\x = Int(Left(coordinates$,Instr(coordinates$,",")))
-	b\y = Int(Mid(coordinates$,Instr(coordinates$,",")+1))
+Function CreateRock()
+	Local coordinates$ = GetValidCoordinates("rock")
+	Local r.Rock = New Rock
+	r\x = Int(Left(coordinates$,Instr(coordinates$,",")))
+	r\y = Int(Mid(coordinates$,Instr(coordinates$,",")+1))
 End Function
 
-Function DrawBarrier()
-	SetColor("barrier")
-	Local b.Barrier
-	For b.Barrier = Each Barrier
-		Oval(b\x*32,b\y*32,32,32,1)
+Function DrawRock()
+	SetColor("rock")
+	Local r.Rock
+	For r.Rock = Each Rock
+		Oval(r\x*32,r\y*32,32,32,1)
 	Next
 End Function
 
@@ -140,9 +177,9 @@ Function MoveSnake()
 	If (MilliSecs()-lastMillis) > waitSnakeTimer Then
 		lastMillis = MilliSecs()	;reset timer
 		Local head.Snake = First Snake
-		If KeyHit(200)
+		If(KeyHit(200))
 			Local w.Waypoint
-			If (head\direction$ <> "down" And head\direction$ <> "up") Then
+			If(head\direction$ <> "down" And head\direction$ <> "up") Then
 				w.Waypoint = New Waypoint
 				w\x = head\x
 				w\y = head\y
@@ -150,8 +187,8 @@ Function MoveSnake()
 				w\direction$ = "up"
 				head\direction$ = "up"
 			EndIf
-		ElseIf KeyHit(208)
-			If (head\direction$ <> "up" And head\direction$ <> "down") Then
+		ElseIf(KeyHit(208))
+			If(head\direction$ <> "up" And head\direction$ <> "down") Then
 				w.Waypoint = New Waypoint
 				w\x = head\x
 				w\y = head\y
@@ -159,8 +196,8 @@ Function MoveSnake()
 				w\direction$ = "down"
 				head\direction$ = "down"
 			EndIf
-		ElseIf KeyHit(203)
-			If (head\direction$ <> "right" And head\direction$ <> "left") Then
+		ElseIf(KeyHit(203))
+			If(head\direction$ <> "right" And head\direction$ <> "left") Then
 				w.Waypoint = New Waypoint
 				w\x = head\x
 				w\y = head\y
@@ -168,7 +205,7 @@ Function MoveSnake()
 				w\direction$ = "left"
 				head\direction$ = "left"
 			EndIf
-		ElseIf KeyHit(205)
+		ElseIf(KeyHit(205))
 			If (head\direction$ <> "left" And head\direction$ <> "right") Then
 				w.Waypoint = New Waypoint
 				w\x = head\x
@@ -193,7 +230,7 @@ Function MoveSnake()
 			End Select
 		Next
 		
-		CheckWaypoints()
+		CheckWayscore()
 	EndIf
 End Function
 
@@ -239,7 +276,13 @@ Function SnakeCollides()
 		Local s2.Snake
 		For s2.Snake = Each Snake
 			If (s <> s2 And s\x=s2\x And s\y=s2\y) Then
-				RuntimeError "Du hast dich selbst gebissen! Deine Punkte: "+points
+				If(language="en") Then
+					ShowWarning("You have bitten yourself!")
+				Else
+					ShowWarning("Du hast dich selbst gebissen!")
+				EndIf
+				InitGame()
+				Return	;quit current loop
 			EndIf
 		Next
 	Next
@@ -250,38 +293,50 @@ Function SnakeCollides()
 	For a.Apple = Each Apple
 		If (head\x=a\x And head\y=a\y) Then
 			snakeLength=snakeLength+1
-			points=points+100
+			score=score+100
 			Delete a
 			numberOfApples = numberOfApples-1
-			Local b.Barrier
-			For b.Barrier = Each Barrier
-				Delete b
+			Local r.Rock
+			For r.Rock = Each Rock
+				Delete r
 			Next
 			ElongateSnake()
 			If(numberOfApples=0) Then CreateApples()
 			If(snakeLength>4) Then
 				Local i
 				For i=0 To snakeLength/4
-					CreateBarrier()
+					CreateRock()
 				Next
 			EndIf
 			waitSnakeTimer=waitSnakeTimer-1	;decreasing value => lower interval
 		EndIf
 	Next
 		
-	;collide with a barrier
-	For b.Barrier = Each Barrier
-		If (head\x=b\x And head\y=b\y) Then
-			RuntimeError "Du bist gegen einen Stein gerannt! Deine Punkte: "+points
+	;collide with a rock
+	For r.Rock = Each Rock
+		If (head\x=r\x And head\y=r\y) Then
+			If(language="en") Then
+				ShowWarning("You hit a massive rock!")
+			Else
+				ShowWarning("Du hast einen Felsen gerammt!")
+			EndIf
+			InitGame()
+			Return	;quit current loop
 		EndIf
 	Next
 	
 	If (head\x<0 Or head\y<0 Or head\x>screenX-1 Or head\y>screenY-1) Then
-		RuntimeError "Du hast den Rand berührt! Deine Punkte: "+points
+		If(language="en") Then
+			ShowWarning("You touched the border!")
+		Else
+			ShowWarning("Du hast den Rand berührt!")
+		EndIf
+		InitGame()
+		Return	;quit current loop
 	EndIf
 End Function
 
-Function CheckWaypoints()
+Function CheckWayscore()
 	Local s.Snake
 	For s.Snake = Each Snake
 		Local w.Waypoint
@@ -298,38 +353,72 @@ Function CheckWaypoints()
 	Next
 End Function
 
+Function ShowWarning(message$)
+	Local guiScore$
+	
+	;draw a nice box around the warning message
+	SetColor("warning box")
+	Rect(screenX*32/2-StringWidth(message$)/2-25,screenY*32/2-50,StringWidth(message$)+50,100)
+	SetColor("warning")
+	Text(screenX*32/2,screenY*32/2-25,message$,screenX*32/2,screenY*32/2-25)
+	If(language$="en") Then
+		guiScore$ = "Your Score: "
+	ElseIf(language="de") Then
+		guiScore$ = "Deine Punkte: "
+	EndIf
+	Text(screenX*32/2,screenY*32/2+25,guiScore$+score,screenX*32/2,screenY*32/2+25)
+	Flip(0)
+	Delay(2500)
+End Function
+
+Function ToggleLanguage()
+	If(KeyHit(18)) Then
+		language$ = "en"
+	ElseIf(KeyHit(32)) Then
+		language$ = "de"
+	EndIf
+End Function
+
 Function SetColor(c$)
 	Select c$
 		Case "apple"
-			Color 255,0,0
-		Case "barrier"
-			Color 128,128,128
+			Color(255,0,0)
+		Case "rock"
+			Color(128,128,128)
 		Case "snake"
-			Color 0,255,0
-		Case "points"
-			Color 255,255,0
+			Color(0,255,0)
+		Case "score"
+			Color(255,255,0)
 		Case "length"
-			Color 255,128,128
+			Color(255,128,128)
+		Case "warning"
+			Color(128,128,0)
+		Case "warning box"
+			Color(30,30,100)
 	End Select
 End Function
 
 Function GUI()
-	SetColor("points")
-	Text((screenX*32/2),10,"Punkte: "+points,(screenX*32/2))
+	Local guiScore$, guiLength$
+	If(language$="en") Then
+		guiScore$ = "Score: "
+		guiLength$ = "Length of snake: "
+	ElseIf(language="de") Then
+		guiScore$ = "Punkte: "
+		guiLength$ = "Länge der Schlange: "
+	EndIf
+	
+	SetColor("score")
+	Text((screenX*32/2),10,guiScore$+score,(screenX*32/2))
 	SetColor("length")
-	Text ((screenX*32/2),40,"Länge der Schlange: "+snakeLength,(screenX*32/2))
-End Function
-
-Function DebugStats()
-	SetColor("debug")
-	Text 0,40,"Anzahl der Äpfel: "+numberOfApples
+	Text ((screenX*32/2),40,guiLength$+snakeLength,(screenX*32/2))
 End Function
 
 Type Apple
 	Field x,y
 End Type
 
-Type Barrier
+Type Rock
 	Field x,y
 End Type
 
