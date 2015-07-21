@@ -26,6 +26,10 @@ anschauen, nach welchem Prinzip das Spiel aufgebaut ist. Insofern kannst du es a
 als *Tutorial* betrachten, falls du Lust hast, selbst mal einen Snake-Klon zu 
 programmieren.
 
+Der Code-Stil ist sehr strikt, d.h. alle lokalen Variablen wurden explizit initialisiert
+und die Datentypen durchgängig gekennzeichnet. Der Code ist nach den 
+*SparkBlitzSyntax*-Regeln aufgebaut.
+
 ![alt text](http://www.blitzbasic.com/img/blitz3d.png "Blitz3D")
 
 #### Viel Spaß beim Spielen!
