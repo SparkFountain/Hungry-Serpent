@@ -1,3 +1,5 @@
+![Hungry Serpent Logo](https://raw.githubusercontent.com/SparkFountain/Hungry-Serpent/master/logo.png "Logo")
+
 # Hungry Serpent
 ###### © by [Spark Fountain](http://sparkfountain.de/), 2013 - 2015
 
@@ -28,8 +30,8 @@ programmieren.
 
 Der Code-Stil ist sehr strikt, d.h. alle lokalen Variablen wurden explizit initialisiert
 und die Datentypen durchgängig gekennzeichnet. Der Code ist nach den 
-*SparkBlitzSyntax*-Regeln aufgebaut.
+**SparkBlitzSyntax**-Regeln aufgebaut.
 
-![alt text](http://www.blitzbasic.com/img/blitz3d.png "Blitz3D")
+![Blitz3D](http://www.blitzbasic.com/img/blitz3d.png "Blitz3D")
 
 #### Viel Spaß beim Spielen!
