@@ -1,12 +1,12 @@
 ;HUNGRY SERPENT
 ;==============
-;© by Spark Fountain, 2013.
+;© by Spark Fountain, 2013-2015.
 
 AppTitle("Hungry Serpent")
 
 ;Screen resolution (in square fields, each square 32x32 pixels)
-Global screenX = 20
-Global screenY = 15
+Global screenX = 25
+Global screenY = 20
 
 Graphics(screenX*32,screenY*32,16,2)
 SetBuffer(BackBuffer())
@@ -22,9 +22,13 @@ Global snakeY = screenY/2
 Global snakeLength = 0
 
 Global lastMillis = 0
-Global speed = 150
+Global waitSnakeTimer = 200
 
+Global numberOfApples = 0
 Global points = 0
+
+Global guiFont = LoadFont("Courier",24,1)
+SetFont(guiFont)
 
 ;create head of snake
 Local s.Snake = New Snake
@@ -41,12 +45,12 @@ For i=0 To 2
 Next
 
 ;create first apple
-CreateApple()
+CreateApples()
 
 ;MAIN LOOP
 Repeat
 	
-	WaitTimer frameTimer
+	WaitTimer(frameTimer)
 	Cls()
 	
 	DrawApple()
@@ -57,20 +61,56 @@ Repeat
 	
 	GUI()
 	
-	DebugStats()
+	;DebugStats()
 	
 	Flip(0)
 	
-	
-Until KeyHit(1)
+Until(KeyHit(1))
 End
 
 
 
-Function CreateApple()
-	Local a.Apple = New Apple
-	a\x = Rnd(1,screenX-1)
-	a\y = Rnd(1,screenY-1)
+Function GetValidCoordinates$(forElement$)
+	Local validCoordinates
+	Local x,y
+	Local s.Snake, a.Apple, b.Barrier
+	Repeat
+		validCoordinates = True
+		x = Rnd(1,screenY-1)
+		y = Rnd(1,screenY-1)
+		
+		;don't create the object where the snake already is
+		For s.Snake = Each Snake
+			If(s\x=x And s\y=y) Then validCoordinates = False
+		Next
+		
+		;if apple: don't create where a barrier is
+		If(forElement$ = "apple") Then
+			For b.Barrier = Each Barrier
+				If(b\x=x And b\y=y) Then validCoordinates = False
+			Next
+		EndIf
+		
+		;if barrier: don't create where an apple is
+		If(forElement$ = "apple") Then
+			For a.Apple = Each Apple
+				If(a\x=x And a\y=y) Then validCoordinates = False
+			Next
+		EndIf
+	Until(validCoordinates=True)
+
+	Return(x+","+y)
+End Function
+
+Function CreateApples()
+	Local i
+	For i=1 To snakeLength/5+1
+		Local a.Apple = New Apple
+		Local coordinates$ = GetValidCoordinates("apple")
+		a\x = Int(Left(coordinates$,Instr(coordinates$,",")))
+		a\y = Int(Mid(coordinates$,Instr(coordinates$,",")+1))
+		numberOfApples = numberOfApples+1
+	Next
 End Function
 
 Function DrawApple()
@@ -82,9 +122,10 @@ Function DrawApple()
 End Function 
 
 Function CreateBarrier()
+	Local coordinates$ = GetValidCoordinates("barrier")
 	Local b.Barrier = New Barrier
-	b\x = Rnd(screenX-1)
-	b\y = Rnd(screenY-1)
+	b\x = Int(Left(coordinates$,Instr(coordinates$,",")))
+	b\y = Int(Mid(coordinates$,Instr(coordinates$,",")+1))
 End Function
 
 Function DrawBarrier()
@@ -96,7 +137,7 @@ Function DrawBarrier()
 End Function
 
 Function MoveSnake()
-	If (MilliSecs()-lastMillis) > speed Then
+	If (MilliSecs()-lastMillis) > waitSnakeTimer Then
 		lastMillis = MilliSecs()	;reset timer
 		Local head.Snake = First Snake
 		If KeyHit(200)
@@ -185,7 +226,7 @@ Function DrawSnake()
 	SetColor("snake")
 	Local s.Snake
 	For s.Snake = Each Snake
-		Rect s\x*32,s\y*32,32,32,1
+		Rect(s\x*32,s\y*32,32,32,1)
 	Next
 End Function 
 
@@ -211,19 +252,20 @@ Function SnakeCollides()
 			snakeLength=snakeLength+1
 			points=points+100
 			Delete a
+			numberOfApples = numberOfApples-1
 			Local b.Barrier
 			For b.Barrier = Each Barrier
 				Delete b
 			Next
 			ElongateSnake()
-			CreateApple()
-			If (snakeLength>4) Then
+			If(numberOfApples=0) Then CreateApples()
+			If(snakeLength>4) Then
 				Local i
-				For i=0 To Rnd(1,3)
+				For i=0 To snakeLength/4
 					CreateBarrier()
 				Next
 			EndIf
-			speed=speed-1	;decreasing value => lower interval
+			waitSnakeTimer=waitSnakeTimer-1	;decreasing value => lower interval
 		EndIf
 	Next
 		
@@ -264,23 +306,23 @@ Function SetColor(c$)
 			Color 128,128,128
 		Case "snake"
 			Color 0,255,0
-		Case "debug"
+		Case "points"
 			Color 255,255,0
+		Case "length"
+			Color 255,128,128
 	End Select
 End Function
 
 Function GUI()
-	Text 0,0,"Punkte: "+points
+	SetColor("points")
+	Text((screenX*32/2),10,"Punkte: "+points,(screenX*32/2))
+	SetColor("length")
+	Text ((screenX*32/2),40,"Länge der Schlange: "+snakeLength,(screenX*32/2))
 End Function
 
 Function DebugStats()
 	SetColor("debug")
-	Local w.Waypoint
-	For w.Waypoint = Each Waypoint
-		Text w\x*32,w\y*32,"X: "+w\passed
-	Next
-	
-	Text 0,20,"Länge der Schlange: "+snakeLength
+	Text 0,40,"Anzahl der Äpfel: "+numberOfApples
 End Function
 
 Type Apple
