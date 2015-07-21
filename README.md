@@ -2,35 +2,38 @@
 ![Hungry Serpent Logo](https://raw.githubusercontent.com/SparkFountain/Hungry-Serpent/master/logo.png "Logo")
 ###### © by [Spark Fountain](http://sparkfountain.de/), 2013 - 2015
 
-## Worum geht's?
-Man steuert eine grüne Schlange über den Bildschirm und bewegt sie zu den roten Äpfeln.
-Immer wenn die Schlange einen Apfel frisst, wächst sie ein bisschen und bewegt sich 
-schneller. Es tauchen mit der Zeit auch graue Felsen auf, denen du ausweichen musst. 
-Wenn die Schlange gegen eine Wand oder einen Felsen gerät, ist das Spiel vorbei.
+## What's this?
+You move a green snake over the screen and navigate it to the red apples.
+Every time the snake gulps an apple, it grows a bit and moves faster.
+After some time, massive gray rocks will appear which you have to avoid.
+If the snake hits a border or rock or bites itself, the game is over.
 
-Es handelt sich bei **Hungry Serpent** um einen ganz einfachen 
-[Snake](https://en.wikipedia.org/wiki/Snake_%28video_game%29)-Klon mit simpler, 
-computergenerierter Grafik. Es werden außerdem keinerlei externe Ressource verwendet.
+**Hungry Serpent** is just a very basic
+[Snake](https://en.wikipedia.org/wiki/Snake_%28video_game%29)-Clone with simple, 
+computer generated graphics. The game does not use any external ressources.
 
-## Steuerung
-Mit den Pfeiltasten wird die Schlange bewegt. Versuche auf die roten Äpfel zuzusteuern 
-(das sind die roten Kreise), während du den Felsen (graue Kreise) ausweichen solltest.
+## Controls
+Move the Snake with the `arrow keys`. Try to head for the apples (these are the red circles)
+whereas you should sidestep the rocks (the gray circles).
 
-Wenn du verlierst, startet das Spiel wieder von vorne.
+If you lose, the game will restart.
+
+## Language Configuration
+The ingame texts are available in English, as well as in German. Press `D` to get
+the German interface and `E` to switch back to English language.
 
 ## Credits
-* Programmierung: Stefan Behrendt
+* Programming: Stefan Behrendt
 
-Das Spiel ist in [Blitz3D](http://www.blitzbasic.com/Products/blitz3d.php) geschrieben 
-und der Quellcode ist beigefügt. Er ist auf Englisch kommentiert, d.h. du kannst dir 
-anschauen, nach welchem Prinzip das Spiel aufgebaut ist. Insofern kannst du es auch 
-als *Tutorial* betrachten, falls du Lust hast, selbst mal einen Snake-Klon zu 
-programmieren.
+This game is written in [Blitz3D](http://www.blitzbasic.com/Products/blitz3d.php)
+and the source code is attached. It is commented so that you can see how the game
+logic works at all. Hence, you can also use this as a *tutorial* if you feel like
+programming a snake clone on your own.
 
-Der Code-Stil ist sehr strikt, d.h. alle lokalen Variablen wurden explizit initialisiert
-und die Datentypen durchgängig gekennzeichnet. Der Code ist nach den 
-**SparkBlitzSyntax**-Regeln aufgebaut.
+The coding style is very strict: That means all local variables have been explicitly
+initialised and the data types are indicated consistently. The code follows the 
+**SparkBlitzSyntax** rules. 
 
 ![Blitz3D](http://www.blitzbasic.com/img/blitz3d.png "Blitz3D")
 
-#### Viel Spaß beim Spielen!
+#### Enjoy playing!
