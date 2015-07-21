@@ -1,28 +1,41 @@
-# HUNGRY SERPENT
-###### © by Spark Fountain, 2013
-
-Vielen Dank, dass du dir das Spiel heruntergeladen hast!
+# Hungry Serpent
+![Hungry Serpent Logo](https://raw.githubusercontent.com/SparkFountain/Hungry-Serpent/master/logo.png "Logo")
+###### © by [Spark Fountain](http://sparkfountain.de/), 2013 - 2015
 
 ## Worum geht's?
+Man steuert eine grüne Schlange über den Bildschirm und bewegt sie zu den roten Äpfeln.
+Immer wenn die Schlange einen Apfel frisst, wächst sie ein bisschen und bewegt sich 
+schneller. Es tauchen mit der Zeit auch graue Felsen auf, denen du ausweichen musst. 
+Wenn die Schlange gegen eine Wand oder einen Felsen gerät oder sich selbst beißt, ist
+das Spiel vorbei.
 
-Es handelt sich bei diesem Spiel um einen ganz einfachen Snake-Klon, mit absolut zweckmäßiger, 
-computergenerierter Grafik und ohne externe Ressourcen.
-
-Das Spiel ist in BlitzBasic geschrieben, und der Quellcode ist beigefügt. Er ist auf
-Englisch kommentiert, d.h. du kannst dir anschauen, nach welchem Prinzip das Spiel
-aufgebaut ist. Insofern kann man es auch als "Tutorial" betrachten, falls du Lust hast,
-selbst mal einen Snake-Klon zu programmieren.
+Es handelt sich bei **Hungry Serpent** um einen ganz einfachen 
+[Snake](https://en.wikipedia.org/wiki/Snake_%28video_game%29)-Klon mit simpler, 
+computergenerierter Grafik. Es werden außerdem keinerlei externe Ressource verwendet.
 
 ## Steuerung
+Mit den `Pfeiltasten` wird die Schlange bewegt. Versuche auf die Äpfel zuzusteuern 
+(das sind die roten Kreise), während du den Felsen (graue Kreise) ausweichen solltest.
 
-Mit den Pfeiltasten links, rechts, oben und unten wird die Schlange bewegt. Versuche auf
-die roten Äpfel zuzusteuern (das sind die roten Kreise), während du nicht gegen Steine
-(graue Kreise) rennen solltest.
+Wenn du verlierst, startet das Spiel wieder von vorne.
 
-Wenn du verlierst, endet das Spiel einfach mit einer Meldung über deine Punktzahl.
+## Spracheinstellungen
+Drücke `D`, um das Spiel in deutscher Sprache zu spielen. Standardmäßig startet es mit 
+englischsprachiger Textausgabe. Drücke `E`, um wieder auf Englisch zu wechseln.
 
 ## Credits
+* Programmierung: Stefan Behrendt
 
-* Programmierung: Spark Fountain
+Das Spiel ist in [Blitz3D](http://www.blitzbasic.com/Products/blitz3d.php) geschrieben 
+und der Quellcode ist beigefügt. Er ist auf Englisch kommentiert, d.h. du kannst dir 
+anschauen, nach welchem Prinzip das Spiel aufgebaut ist. Insofern kannst du es auch 
+als *Tutorial* betrachten, falls du Lust hast, selbst mal einen Snake-Klon zu 
+programmieren.
+
+Der Code-Stil ist sehr strikt, d.h. alle lokalen Variablen wurden explizit initialisiert
+und die Datentypen durchgängig gekennzeichnet. Der Code ist nach den 
+**SparkBlitzSyntax**-Regeln aufgebaut.
+
+![Blitz3D](http://www.blitzbasic.com/img/blitz3d.png "Blitz3D")
 
 #### Viel Spaß beim Spielen!
